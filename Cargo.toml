@@ -1,0 +1,9 @@
+[package]
+name = "clicker"
+version = "0.1.0"
+authors = ["enfipy <enfipy@gmail.com>"]
+edition = "2018"
+
+[dependencies]
+iced = "0.2"
+enigo = "0.0.14"
