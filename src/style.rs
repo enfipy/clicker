@@ -1,4 +1,4 @@
-use iced::{button, checkbox, container, progress_bar, radio, scrollable, slider, text_input};
+use iced::{button, checkbox, container, progress_bar, radio, slider, text_input};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Theme {
@@ -48,15 +48,6 @@ impl From<Theme> for Box<dyn button::StyleSheet> {
         match theme {
             Theme::Light => light::Button.into(),
             Theme::Dark => dark::Button.into(),
-        }
-    }
-}
-
-impl From<Theme> for Box<dyn scrollable::StyleSheet> {
-    fn from(theme: Theme) -> Self {
-        match theme {
-            Theme::Light => Default::default(),
-            Theme::Dark => dark::Scrollable.into(),
         }
     }
 }
@@ -115,9 +106,7 @@ mod light {
 }
 
 mod dark {
-    use iced::{
-        button, checkbox, container, progress_bar, radio, scrollable, slider, text_input, Color,
-    };
+    use iced::{button, checkbox, container, progress_bar, radio, slider, text_input, Color};
 
     const SURFACE: Color = Color::from_rgb(
         0x40 as f32 / 255.0,
@@ -241,50 +230,6 @@ mod dark {
                 border_width: 1.0,
                 border_color: Color::WHITE,
                 ..self.hovered()
-            }
-        }
-    }
-
-    pub struct Scrollable;
-
-    impl scrollable::StyleSheet for Scrollable {
-        fn active(&self) -> scrollable::Scrollbar {
-            scrollable::Scrollbar {
-                background: SURFACE.into(),
-                border_radius: 2.0,
-                border_width: 0.0,
-                border_color: Color::TRANSPARENT,
-                scroller: scrollable::Scroller {
-                    color: ACTIVE,
-                    border_radius: 2.0,
-                    border_width: 0.0,
-                    border_color: Color::TRANSPARENT,
-                },
-            }
-        }
-
-        fn hovered(&self) -> scrollable::Scrollbar {
-            let active = self.active();
-
-            scrollable::Scrollbar {
-                background: Color { a: 0.5, ..SURFACE }.into(),
-                scroller: scrollable::Scroller {
-                    color: HOVERED,
-                    ..active.scroller
-                },
-                ..active
-            }
-        }
-
-        fn dragging(&self) -> scrollable::Scrollbar {
-            let hovered = self.hovered();
-
-            scrollable::Scrollbar {
-                scroller: scrollable::Scroller {
-                    color: Color::from_rgb(0.85, 0.85, 0.85),
-                    ..hovered.scroller
-                },
-                ..hovered
             }
         }
     }
