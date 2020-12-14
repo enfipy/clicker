@@ -1,0 +1,36 @@
+
+name: Build and publish
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+
+  build-and-publish-release:
+    name: Build and publish Github release
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            binary_target: x86_64-unknown-linux-musl
+          - os: windows-latest
+            binary_target: x86_64-pc-windows-msvc
+          - os: macos-latest
+            binary_target: x86_64-apple-darwin
+    steps:
+    - uses: actions/checkout@master
+    - name: Install cargo make
+      uses: davidB/rust-cargo-make@v1
+    - name: Build binary
+      run: cargo make zip-release -e CARGO_MAKE_RELEASE_FLOW_TARGET=${{ matrix.binary_target }}
+    - name: Upload zip file
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: '*.zip'
+        tag: ${{ github.ref }}
+        overwrite: true
+        file_glob: true
